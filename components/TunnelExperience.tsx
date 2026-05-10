@@ -186,14 +186,14 @@ export default function TunnelExperience({ track, onSwitch }: Props) {
                   </motion.div>
                   <motion.h1 initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.34, duration: 0.45 }}
-                    style={{ fontWeight: 900, color: "#fff", lineHeight: 1.05, marginBottom: 16,
-                      fontSize: isMobile ? "clamp(2rem, 8vw, 2.6rem)" : "clamp(2rem, 3.6vw, 3.6rem)",
+                    style={{ fontWeight: 900, color: "#fff", lineHeight: 1.05, marginBottom: 20,
+                      fontSize: isMobile ? "clamp(2rem, 8vw, 2.6rem)" : "clamp(2.8rem, 4.8vw, 5rem)",
                       whiteSpace: "pre-line", textShadow: `0 0 60px ${slide.accent}55` }}>
                     <HighlightedText text={slide.headline} highlights={slide.highlights} accent={slide.accent} />
                   </motion.h1>
                   <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.44, duration: 0.4 }}
-                    style={{ color: "rgba(255,255,255,0.45)", lineHeight: 1.8, fontSize: isMobile ? 14 : 15, maxWidth: 380 }}>
+                    style={{ color: "rgba(255,255,255,0.45)", lineHeight: 1.8, fontSize: isMobile ? 14 : 17, maxWidth: 400 }}>
                     {slide.sub}
                   </motion.p>
                 </div>
@@ -234,8 +234,8 @@ export default function TunnelExperience({ track, onSwitch }: Props) {
                   transition={{ delay: 0.34, duration: 0.45 }}
                   style={{ fontWeight: 900, color: "#fff", lineHeight: 1.0, marginBottom: 28,
                     fontSize: isExpanded
-                      ? (isMobile ? "clamp(1.4rem, 5vw, 1.6rem)" : "clamp(1.6rem, 2.8vw, 2.8rem)")
-                      : (isMobile ? "clamp(1.8rem, 7vw, 2.4rem)" : "clamp(2.4rem, 4.5vw, 4.5rem)"),
+                      ? (isMobile ? "clamp(1.4rem, 5vw, 1.6rem)" : "clamp(2rem, 3.5vw, 3.5rem)")
+                      : (isMobile ? "clamp(1.8rem, 7vw, 2.4rem)" : "clamp(3rem, 5.5vw, 5.5rem)"),
                     whiteSpace: "pre-line", transition: "font-size 0.35s ease" }}>
                   <HighlightedText text={slide.headline} highlights={slide.highlights} accent={slide.accent} />
                 </motion.h1>
@@ -289,7 +289,7 @@ export default function TunnelExperience({ track, onSwitch }: Props) {
                     <span style={{ fontSize: 11, fontWeight: 500, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.38)" }}>{slide.eyebrow}</span>
                     <span style={{ height: 1, width: 20, opacity: 0.4, background: slide.accent, display: "block" }} />
                   </div>
-                  <h1 style={{ fontWeight: 900, color: "#fff", lineHeight: 1.0, fontSize: isMobile ? "clamp(1.5rem, 6vw, 1.9rem)" : "clamp(1.8rem, 3.2vw, 3.2rem)", whiteSpace: "pre-line", textShadow: `0 0 60px ${slide.accent}55` }}>
+                  <h1 style={{ fontWeight: 900, color: "#fff", lineHeight: 1.0, fontSize: isMobile ? "clamp(1.5rem, 6vw, 1.9rem)" : "clamp(2.5rem, 4.2vw, 4.2rem)", whiteSpace: "pre-line", textShadow: `0 0 60px ${slide.accent}55` }}>
                     <HighlightedText text={slide.headline} highlights={slide.highlights} accent={slide.accent} />
                   </h1>
                 </motion.div>
@@ -338,7 +338,7 @@ export default function TunnelExperience({ track, onSwitch }: Props) {
                 <motion.h1 initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.34, duration: 0.5 }}
                   style={{ fontWeight: 900, color: "#fff", lineHeight: 1.1, marginBottom: 28,
-                    fontSize: isMobile ? "clamp(1.6rem, 6.5vw, 2.2rem)" : "clamp(1.8rem, 3.4vw, 3.4rem)",
+                    fontSize: isMobile ? "clamp(1.6rem, 6.5vw, 2.2rem)" : "clamp(2.5rem, 4.5vw, 4.5rem)",
                     textShadow: `0 0 70px ${slide.accent}55` }}>
                   <HighlightedText text={slide.headline} highlights={slide.highlights} accent={slide.accent} />
                 </motion.h1>
@@ -372,13 +372,13 @@ export default function TunnelExperience({ track, onSwitch }: Props) {
                 <motion.h1 initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.36, duration: 0.45 }}
                   style={{ fontWeight: 900, color: "#fff", lineHeight: 0.95, marginBottom: 28,
-                    fontSize: isMobile ? "clamp(2rem, 9vw, 3rem)" : "clamp(2rem, 3.8vw, 3.8rem)",
+                    fontSize: isMobile ? "clamp(2rem, 9vw, 3rem)" : "clamp(3rem, 5.5vw, 5.5rem)",
                     whiteSpace: "pre-line", textShadow: `0 0 70px ${slide.accent}55` }}>
                   <HighlightedText text={slide.headline} highlights={slide.highlights} accent={slide.accent} />
                 </motion.h1>
                 <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.46, duration: 0.4 }}
-                  style={{ color: "rgba(255,255,255,0.48)", lineHeight: 1.85, maxWidth: 480, fontSize: isMobile ? 14 : 16 }}>
+                  style={{ color: "rgba(255,255,255,0.48)", lineHeight: 1.85, maxWidth: 520, fontSize: isMobile ? 14 : 17 }}>
                   {slide.sub}
                 </motion.p>
               </div>
