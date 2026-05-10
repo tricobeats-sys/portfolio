@@ -3,7 +3,6 @@
 import { motion } from "framer-motion";
 
 const data = [
-  { year: "21", value: 12,  partial: false },
   { year: "22", value: 18,  partial: false },
   { year: "23", value: 26,  partial: false },
   { year: "24", value: 34,  partial: false },

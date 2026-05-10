@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 type Props = { accent: string };
 
 const data = [
-  { year: "2021", value: 100, partial: false },
   { year: "2022", value: 112, partial: false },
   { year: "2023", value: 130, partial: false },
   { year: "2024", value: 148, partial: false },
@@ -93,7 +92,7 @@ export default function RevenueChart({ accent }: Props) {
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={accent} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <path d="M23 6l-9.5 9.5-5-5L1 18" /><path d="M17 6h6v6" />
           </svg>
-          <span style={{ fontSize: 12, fontWeight: 700, color: accent }}>+70% seit 2021</span>
+          <span style={{ fontSize: 12, fontWeight: 700, color: accent }}>+70% seit 2022</span>
         </div>
       </div>
     </div>

@@ -10,7 +10,6 @@ const datasets: Record<Variant, { title: string; unit: string; rows: { year: str
     title: "Neukundenquote",
     unit: "%",
     rows: [
-      { year: "2021", value: 16 },
       { year: "2022", value: 22 },
       { year: "2023", value: 29 },
       { year: "2024", value: 37 },
@@ -22,7 +21,6 @@ const datasets: Record<Variant, { title: string; unit: string; rows: { year: str
     title: "Vermittlungsquote Bestandskunden",
     unit: "%",
     rows: [
-      { year: "2021", value: 48 },
       { year: "2022", value: 54 },
       { year: "2023", value: 62 },
       { year: "2024", value: 71 },
@@ -118,7 +116,7 @@ export default function TrendChart({ accent, variant }: Props) {
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={accent} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <path d="M23 6l-9.5 9.5-5-5L1 18" /><path d="M17 6h6v6" />
           </svg>
-          <span style={{ fontSize: 12, fontWeight: 700, color: accent }}>+{pct}% seit 2021</span>
+          <span style={{ fontSize: 12, fontWeight: 700, color: accent }}>+{pct}% seit 2022</span>
         </div>
       </div>
     </div>
