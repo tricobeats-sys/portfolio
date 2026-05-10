@@ -213,7 +213,7 @@ export default function TunnelExperience({ track, onSwitch }: Props) {
                 className="flex items-center justify-center">
                 <NeonButton glowColor="rgba(255,255,255,0.75)" primary onClick={onSwitch}>
                   {track === "achievements" ? (
-                    <>So bringe ich <strong style={{ fontWeight: 900 }}>&nbsp;Persona Service&nbsp;</strong> voran</>
+                    <span>So bringe ich <strong style={{ fontWeight: 900 }}>Persona Service</strong> voran</span>
                   ) : "Meine Erfolge"}
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                     strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.5 }}>
@@ -329,13 +329,14 @@ export default function TunnelExperience({ track, onSwitch }: Props) {
 
             ) : slide.category === "quote_slide" ? (
               /* ── Quote ── */
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", maxWidth: 720 }}>
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", maxWidth: 720, margin: "0 auto" }}>
                 <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.28, duration: 0.35 }}
                   style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 32 }}>
                   <span style={{ height: 1, width: 20, opacity: 0.4, background: slide.accent, display: "block" }} />
                   <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", color: slide.accent }}>{slide.number}</span>
                   <span style={{ fontSize: 11, fontWeight: 500, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.38)" }}>{slide.eyebrow}</span>
+                  <span style={{ height: 1, width: 20, opacity: 0.4, background: slide.accent, display: "block" }} />
                 </motion.div>
                 <motion.h1 initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.34, duration: 0.5 }}
@@ -346,7 +347,7 @@ export default function TunnelExperience({ track, onSwitch }: Props) {
                 </motion.h1>
                 <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.5, duration: 0.4 }}
-                  style={{ color: "rgba(255,255,255,0.4)", fontSize: isMobile ? 15 : 17, lineHeight: 1.8, fontStyle: "italic", whiteSpace: "pre-line" }}>
+                  style={{ color: "rgba(255,255,255,0.4)", fontSize: isMobile ? 15 : 17, lineHeight: 1.8, fontStyle: "italic", whiteSpace: "pre-line", textAlign: "center" }}>
                   {slide.quoteSmall}
                 </motion.p>
               </div>
