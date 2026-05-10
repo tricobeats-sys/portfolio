@@ -15,6 +15,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Mike Hammer — Portfolio",
   description: "Interaktiver Lebenslauf und Erfolge von Mike Hammer",
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({
