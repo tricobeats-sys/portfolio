@@ -62,6 +62,14 @@ export default function TunnelExperience({ track, onSwitch }: Props) {
   const [locked, setLocked] = useState(false);
   const [flash,  setFlash]  = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   const slide    = slides[index];
   const isLast   = index === slides.length - 1;
@@ -159,16 +167,16 @@ export default function TunnelExperience({ track, onSwitch }: Props) {
         style={{ background: `radial-gradient(ellipse 45% 35% at 50% 50%, transparent 35%, ${slide.accent}10 68%, transparent 100%)` }} />
 
       {/* ── Content ── */}
-      <div className="absolute inset-0 flex items-center justify-center px-4 md:px-10 pt-20 md:pt-28 pb-20 md:pb-24 overflow-y-auto"
-        style={{ transformStyle: "preserve-3d" }}>
+      <div className="absolute inset-0 flex items-center justify-center"
+        style={{ padding: isMobile ? "72px 24px 64px" : "112px 40px 96px", transformStyle: "preserve-3d" }}>
         <AnimatePresence mode="wait">
           <motion.div key={slide.id} variants={warpVariants} initial="enter" animate="center" exit="exit"
             className="w-full max-w-6xl" style={{ willChange: "transform, opacity, filter" }}>
 
             {hasChart ? (
               /* ── Achievement: split layout ── */
-              <div className="flex flex-col md:flex-row items-center gap-8 md:gap-16" style={{ justifyContent: "space-between" }}>
-                <div style={{ flex: "0 1 420px", display: "flex", flexDirection: "column", alignItems: "flex-start", textAlign: "left", minWidth: 0, width: "100%" }}>
+              <div className={isMobile ? "" : "flex flex-row items-center"} style={isMobile ? {} : { justifyContent: "space-between", gap: 64 }}>
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", textAlign: "left", flex: isMobile ? undefined : "0 1 420px", minWidth: 0 }}>
                   <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.28, duration: 0.35 }}
                     style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
@@ -178,24 +186,24 @@ export default function TunnelExperience({ track, onSwitch }: Props) {
                   </motion.div>
                   <motion.h1 initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.34, duration: 0.45 }}
-                    style={{ fontWeight: 900, color: "#fff", lineHeight: 1.0, marginBottom: 16,
-                      fontSize: "clamp(1.9rem, 5vw, 3.6rem)", whiteSpace: "pre-line",
-                      textShadow: `0 0 60px ${slide.accent}55` }}>
+                    style={{ fontWeight: 900, color: "#fff", lineHeight: 1.05, marginBottom: 16,
+                      fontSize: isMobile ? "clamp(2rem, 8vw, 2.6rem)" : "clamp(2rem, 3.6vw, 3.6rem)",
+                      whiteSpace: "pre-line", textShadow: `0 0 60px ${slide.accent}55` }}>
                     <HighlightedText text={slide.headline} highlights={slide.highlights} accent={slide.accent} />
                   </motion.h1>
                   <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.44, duration: 0.4 }}
-                    style={{ color: "rgba(255,255,255,0.45)", lineHeight: 1.85, fontSize: 14, maxWidth: 360 }}>
+                    style={{ color: "rgba(255,255,255,0.45)", lineHeight: 1.8, fontSize: isMobile ? 14 : 15, maxWidth: 380 }}>
                     {slide.sub}
                   </motion.p>
                 </div>
-                <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.4, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-                  className="flex-shrink-0 flex items-center justify-center w-full md:w-auto" style={{ marginLeft: 0 }}>
-                  <div className="w-full overflow-x-auto flex justify-center md:justify-end">
+                {!isMobile && (
+                  <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.4, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+                    className="flex-shrink-0 flex items-center justify-end" style={{ flex: "0 1 auto" }}>
                     <SlideChart slideId={slide.id} accent={slide.accent} />
-                  </div>
-                </motion.div>
+                  </motion.div>
+                )}
               </div>
 
             ) : slide.category === "closing" ? (
@@ -217,16 +225,18 @@ export default function TunnelExperience({ track, onSwitch }: Props) {
               <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", maxWidth: 680 }}>
                 <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.28, duration: 0.35 }}
-                  style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 36 }}>
+                  style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 28 }}>
                   <span style={{ height: 1, width: 20, opacity: 0.4, background: slide.accent, display: "block" }} />
                   <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", color: slide.accent }}>{slide.number}</span>
                   <span style={{ fontSize: 11, fontWeight: 500, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.38)" }}>{slide.eyebrow}</span>
                 </motion.div>
                 <motion.h1 initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.34, duration: 0.45 }}
-                  style={{ fontWeight: 900, color: "#fff", lineHeight: 1.0, marginBottom: 32,
-                    fontSize: isExpanded ? "clamp(1.6rem, 2.8vw, 2.8rem)" : "clamp(2.4rem, 4.5vw, 4.5rem)",
-                    whiteSpace: "pre-line", textShadow: `0 0 60px ${slide.accent}55`, transition: "font-size 0.35s ease" }}>
+                  style={{ fontWeight: 900, color: "#fff", lineHeight: 1.0, marginBottom: 28,
+                    fontSize: isExpanded
+                      ? (isMobile ? "clamp(1.4rem, 5vw, 1.6rem)" : "clamp(1.6rem, 2.8vw, 2.8rem)")
+                      : (isMobile ? "clamp(1.8rem, 7vw, 2.4rem)" : "clamp(2.4rem, 4.5vw, 4.5rem)"),
+                    whiteSpace: "pre-line", transition: "font-size 0.35s ease" }}>
                   <HighlightedText text={slide.headline} highlights={slide.highlights} accent={slide.accent} />
                 </motion.h1>
                 <AnimatePresence>
@@ -269,21 +279,21 @@ export default function TunnelExperience({ track, onSwitch }: Props) {
               </div>
 
             ) : slide.category === "phases" ? (
-              /* ── Phases: 3 columns ── */
+              /* ── Phases: 3 columns (desktop) / stacked (mobile) ── */
               <div style={{ width: "100%", maxWidth: 900, margin: "0 auto" }}>
                 <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2, duration: 0.4 }} style={{ marginBottom: 32, textAlign: "center" }}>
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, marginBottom: 16 }}>
+                  transition={{ delay: 0.2, duration: 0.4 }} style={{ marginBottom: isMobile ? 20 : 32, textAlign: "center" }}>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, marginBottom: 14 }}>
                     <span style={{ height: 1, width: 20, opacity: 0.4, background: slide.accent, display: "block" }} />
                     <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", color: slide.accent }}>{slide.number}</span>
                     <span style={{ fontSize: 11, fontWeight: 500, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.38)" }}>{slide.eyebrow}</span>
                     <span style={{ height: 1, width: 20, opacity: 0.4, background: slide.accent, display: "block" }} />
                   </div>
-                  <h1 style={{ fontWeight: 900, color: "#fff", lineHeight: 1.0, fontSize: "clamp(1.6rem, 3.2vw, 3.2rem)", whiteSpace: "pre-line", textShadow: `0 0 60px ${slide.accent}55` }}>
+                  <h1 style={{ fontWeight: 900, color: "#fff", lineHeight: 1.0, fontSize: isMobile ? "clamp(1.5rem, 6vw, 1.9rem)" : "clamp(1.8rem, 3.2vw, 3.2rem)", whiteSpace: "pre-line", textShadow: `0 0 60px ${slide.accent}55` }}>
                     <HighlightedText text={slide.headline} highlights={slide.highlights} accent={slide.accent} />
                   </h1>
                 </motion.div>
-                <div className="flex flex-col md:flex-row" style={{ gap: 12 }}>
+                <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 10 }}>
                   {slide.phases?.map((phase, i) => (
                     <motion.div key={phase.title} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.45 + i * 0.22, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
@@ -291,21 +301,25 @@ export default function TunnelExperience({ track, onSwitch }: Props) {
                         flex: 1,
                         background: "rgba(255,255,255,0.03)",
                         border: `1px solid ${slide.accent}30`,
-                        borderRadius: 20,
-                        padding: "24px 20px",
-                        boxShadow: `0 0 18px ${slide.accent}20, 0 0 60px ${slide.accent}0a, inset 0 0 30px ${slide.accent}05`,
+                        borderRadius: 16,
+                        padding: isMobile ? "16px 16px" : "24px 20px",
+                        boxShadow: `0 0 18px ${slide.accent}20, inset 0 0 30px ${slide.accent}05`,
                       }}>
-                      <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.2em", color: slide.accent, display: "block", marginBottom: 10 }}>0{i + 1}</span>
-                      <h3 style={{ fontSize: 16, fontWeight: 800, color: "#fff", marginBottom: 16, letterSpacing: "-0.01em" }}>{phase.title}</h3>
-                      <div style={{ width: 28, height: 1, background: `${slide.accent}50`, marginBottom: 16 }} />
-                      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                        {phase.bullets.map((b, j) => (
-                          <div key={j} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
-                            <span style={{ color: slide.accent, fontSize: 11, marginTop: 4, flexShrink: 0 }}>▸</span>
-                            <span style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", lineHeight: 1.65 }}>{b}</span>
-                          </div>
-                        ))}
+                      <div style={{ display: "flex", alignItems: isMobile ? "center" : "flex-start", gap: isMobile ? 12 : 0, flexDirection: isMobile ? "row" : "column" }}>
+                        <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.2em", color: slide.accent, display: "block", marginBottom: isMobile ? 0 : 10, flexShrink: 0 }}>0{i + 1}</span>
+                        <h3 style={{ fontSize: isMobile ? 14 : 16, fontWeight: 800, color: "#fff", marginBottom: isMobile ? 0 : 14, letterSpacing: "-0.01em" }}>{phase.title}</h3>
                       </div>
+                      {!isMobile && <div style={{ width: 28, height: 1, background: `${slide.accent}50`, marginBottom: 14 }} />}
+                      {!isMobile && (
+                        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                          {phase.bullets.map((b, j) => (
+                            <div key={j} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
+                              <span style={{ color: slide.accent, fontSize: 11, marginTop: 4, flexShrink: 0 }}>▸</span>
+                              <span style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", lineHeight: 1.65 }}>{b}</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </motion.div>
                   ))}
                 </div>
@@ -316,20 +330,21 @@ export default function TunnelExperience({ track, onSwitch }: Props) {
               <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", maxWidth: 720 }}>
                 <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.28, duration: 0.35 }}
-                  style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 40 }}>
+                  style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 32 }}>
                   <span style={{ height: 1, width: 20, opacity: 0.4, background: slide.accent, display: "block" }} />
                   <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", color: slide.accent }}>{slide.number}</span>
                   <span style={{ fontSize: 11, fontWeight: 500, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.38)" }}>{slide.eyebrow}</span>
                 </motion.div>
                 <motion.h1 initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.34, duration: 0.5 }}
-                  style={{ fontWeight: 900, color: "#fff", lineHeight: 1.1, marginBottom: 32,
-                    fontSize: "clamp(1.8rem, 3.4vw, 3.4rem)", textShadow: `0 0 70px ${slide.accent}55` }}>
+                  style={{ fontWeight: 900, color: "#fff", lineHeight: 1.1, marginBottom: 28,
+                    fontSize: isMobile ? "clamp(1.6rem, 6.5vw, 2.2rem)" : "clamp(1.8rem, 3.4vw, 3.4rem)",
+                    textShadow: `0 0 70px ${slide.accent}55` }}>
                   <HighlightedText text={slide.headline} highlights={slide.highlights} accent={slide.accent} />
                 </motion.h1>
                 <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.5, duration: 0.4 }}
-                  style={{ color: "rgba(255,255,255,0.4)", fontSize: 17, lineHeight: 1.8, fontStyle: "italic", whiteSpace: "pre-line" }}>
+                  style={{ color: "rgba(255,255,255,0.4)", fontSize: isMobile ? 15 : 17, lineHeight: 1.8, fontStyle: "italic", whiteSpace: "pre-line" }}>
                   {slide.quoteSmall}
                 </motion.p>
               </div>
@@ -339,7 +354,7 @@ export default function TunnelExperience({ track, onSwitch }: Props) {
               <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", maxWidth: 672, margin: "0 auto" }}>
                 <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.28, duration: 0.35 }}
-                  style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 40 }}>
+                  style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 32 }}>
                   <span style={{ height: 1, width: 20, opacity: 0.4, background: slide.accent, display: "block" }} />
                   <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", color: slide.accent }}>{slide.number}</span>
                   <span style={{ fontSize: 11, fontWeight: 500, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.38)" }}>{slide.eyebrow}</span>
@@ -348,7 +363,7 @@ export default function TunnelExperience({ track, onSwitch }: Props) {
                 {slide.metric && (
                   <motion.div initial={{ opacity: 0, scale: 0.88 }} animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: 0.33, duration: 0.3 }}
-                    style={{ display: "inline-flex", alignItems: "baseline", gap: 8, marginBottom: 32, padding: "10px 24px",
+                    style={{ display: "inline-flex", alignItems: "baseline", gap: 8, marginBottom: 28, padding: "10px 24px",
                       borderRadius: 999, background: `${slide.accent}15`, border: `1px solid ${slide.accent}35` }}>
                     <span style={{ fontSize: "1.5rem", fontWeight: 900, color: slide.accent }}>{slide.metric}</span>
                     <span style={{ fontSize: "0.875rem", color: "rgba(255,255,255,0.4)" }}>{slide.metricLabel}</span>
@@ -356,14 +371,14 @@ export default function TunnelExperience({ track, onSwitch }: Props) {
                 )}
                 <motion.h1 initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.36, duration: 0.45 }}
-                  style={{ fontWeight: 900, color: "#fff", lineHeight: 0.95, marginBottom: 40,
-                    fontSize: "clamp(2rem, 3.8vw, 3.8rem)", whiteSpace: "pre-line",
-                    textShadow: `0 0 70px ${slide.accent}55` }}>
+                  style={{ fontWeight: 900, color: "#fff", lineHeight: 0.95, marginBottom: 28,
+                    fontSize: isMobile ? "clamp(2rem, 9vw, 3rem)" : "clamp(2rem, 3.8vw, 3.8rem)",
+                    whiteSpace: "pre-line", textShadow: `0 0 70px ${slide.accent}55` }}>
                   <HighlightedText text={slide.headline} highlights={slide.highlights} accent={slide.accent} />
                 </motion.h1>
                 <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.46, duration: 0.4 }}
-                  style={{ color: "rgba(255,255,255,0.48)", lineHeight: 1.85, maxWidth: 480, fontSize: 16 }}>
+                  style={{ color: "rgba(255,255,255,0.48)", lineHeight: 1.85, maxWidth: 480, fontSize: isMobile ? 14 : 16 }}>
                   {slide.sub}
                 </motion.p>
               </div>
