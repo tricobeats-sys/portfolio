@@ -121,7 +121,7 @@ export default function LandingScreen({ onChoose }: Props) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.48, duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
           style={{
-            fontSize: isMobile ? "clamp(1rem, 5vw, 1.9rem)" : "clamp(2rem, 2.8vw, 2.8rem)",
+            fontSize: isMobile ? "clamp(1rem, 5vw, 1.9rem)" : "clamp(1.4rem, 3vw, 4rem)",
             letterSpacing: "-0.025em",
             fontWeight: 700,
             color: "#fff",

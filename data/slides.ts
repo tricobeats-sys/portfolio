@@ -1,6 +1,6 @@
 export type Slide = {
   id: number;
-  category: "achievement" | "value" | "accordion" | "phases" | "quote_slide" | "closing";
+  category: "achievement" | "value" | "accordion" | "phases" | "quote_slide" | "map" | "closing";
   number: string;
   eyebrow: string;
   headline: string;
@@ -29,7 +29,7 @@ export const achievementSlides: Slide[] = [
     number: "01",
     eyebrow: "Erfolg",
     headline: "200+ Positionen\nerfolgreich besetzt",
-    sub: "In 8 Jahren habe ich über 200 Fach- und Führungspositionen im Mittelstand und in DAX-Konzernen erfolgreich vermittelt.",
+    sub: "In 4 Jahren habe ich über 200 Fach- und Führungspositionen im kaufmännischen Bereich erfolgreich vermittelt.",
     metric: "200+",
     metricLabel: "Vermittlungen",
     highlights: ["200+"],
@@ -188,6 +188,17 @@ export const goalSlides: Slide[] = [
     sub: "",
     highlights: ["Extrameile"],
     quoteSmall: "Sie fühlt sich aber nicht wie eine Extrameile an …\n… if you do what you want.",
+    bg: BG_CLOSE,
+    accent: "#0e8045",
+  },
+  {
+    id: 15,
+    category: "map",
+    number: "06",
+    eyebrow: "Der Weg zum Ziel",
+    headline: "20 Standorte.\nEin Ziel.",
+    sub: "Persona Service wächst. München ist der nächste Schritt — und der Anfang von etwas Größerem.",
+    highlights: ["20 Standorte"],
     bg: BG_CLOSE,
     accent: "#0e8045",
   },

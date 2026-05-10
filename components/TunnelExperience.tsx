@@ -8,6 +8,7 @@ import CompareBar from "@/components/charts/CompareBar";
 import RevenueChart from "@/components/charts/RevenueChart";
 import ConversionChart from "@/components/charts/ConversionChart";
 import TrendChart from "@/components/charts/TrendChart";
+import GermanyMap from "@/components/GermanyMap";
 
 type Props = { track: Track; onSwitch: () => void };
 
@@ -204,6 +205,30 @@ export default function TunnelExperience({ track, onSwitch }: Props) {
                     <SlideChart slideId={slide.id} accent={slide.accent} />
                   </motion.div>
                 )}
+              </div>
+
+            ) : slide.category === "map" ? (
+              /* ── Full-screen city map ── */
+              <div style={{ position: "fixed", inset: 0, zIndex: 1, overflow: "hidden" }}>
+                <GermanyMap accent={slide.accent} />
+                {/* Subtle vignette */}
+                <div style={{
+                  position: "absolute", inset: 0, pointerEvents: "none",
+                  background: "radial-gradient(ellipse 85% 80% at 50% 50%, transparent 40%, #07090fcc 100%)",
+                }} />
+                {/* Badge bottom center */}
+                <div style={{ position: "absolute", bottom: 72, left: "50%", transform: "translateX(-50%)", zIndex: 10 }}>
+                  <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 2.5, duration: 0.6 }}
+                    style={{ display: "flex", alignItems: "center", gap: 8,
+                      padding: "10px 20px", borderRadius: 999,
+                      background: "rgba(7,9,15,0.75)", backdropFilter: "blur(12px)",
+                      border: `1px solid ${slide.accent}50`,
+                      boxShadow: `0 0 20px ${slide.accent}30` }}>
+                    <span style={{ fontSize: 13, fontWeight: 800, color: slide.accent, letterSpacing: "-0.01em" }}>20 Standorte</span>
+                    <span style={{ fontSize: 13, color: "rgba(255,255,255,0.45)", fontWeight: 500 }}>— München ist der nächste Schritt</span>
+                  </motion.div>
+                </div>
               </div>
 
             ) : slide.category === "closing" ? (
@@ -441,13 +466,27 @@ export default function TunnelExperience({ track, onSwitch }: Props) {
         </motion.p>
       )}
       {index === 0 && !locked && (
-        <motion.p initial={{ opacity: 0 }} animate={{ opacity: [0, 0.3, 0] }}
-          transition={{ delay: 2, duration: 2.5, repeat: 2 }}
-          className="absolute pointer-events-none whitespace-nowrap md:hidden"
-          style={{ bottom: 70, left: "50%", transform: "translateX(-50%)",
-            color: "rgba(255,255,255,0.22)", fontSize: 10, letterSpacing: "0.2em", textTransform: "uppercase" }}>
-          Wischen →
-        </motion.p>
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: [0, 0.85, 0.85, 0] }}
+          transition={{ delay: 1.2, duration: 3.5, times: [0, 0.15, 0.85, 1], repeat: 2 }}
+          className="absolute pointer-events-none md:hidden"
+          style={{ bottom: 68, left: "50%", transform: "translateX(-50%)" }}>
+          <div style={{
+            display: "flex", alignItems: "center", gap: 8,
+            padding: "8px 16px", borderRadius: 999,
+            background: "rgba(255,255,255,0.08)",
+            border: "1px solid rgba(255,255,255,0.15)",
+            backdropFilter: "blur(8px)",
+          }}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M5 12h14M15 8l4 4-4 4" />
+            </svg>
+            <span style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.7)", letterSpacing: "0.06em", whiteSpace: "nowrap" }}>
+              Wischen zum Weiterblättern
+            </span>
+          </div>
+        </motion.div>
       )}
     </div>
   );

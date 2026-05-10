@@ -5,27 +5,29 @@ import { motion } from "framer-motion";
 type Variant = "neukunden" | "bestandskunden";
 type Props = { accent: string; variant: Variant };
 
-const datasets: Record<Variant, { title: string; unit: string; rows: { year: string; value: number }[] }> = {
+const datasets: Record<Variant, { title: string; unit: string; rows: { year: string; value: number; partial?: boolean }[] }> = {
   neukunden: {
     title: "Neukundenquote",
     unit: "%",
     rows: [
+      { year: "2021", value: 16 },
       { year: "2022", value: 22 },
       { year: "2023", value: 29 },
       { year: "2024", value: 37 },
       { year: "2025", value: 42 },
-      { year: "2026", value: 46 },
+      { year: "2026", value: 24, partial: true },
     ],
   },
   bestandskunden: {
     title: "Vermittlungsquote Bestandskunden",
     unit: "%",
     rows: [
+      { year: "2021", value: 48 },
       { year: "2022", value: 54 },
       { year: "2023", value: 62 },
       { year: "2024", value: 71 },
       { year: "2025", value: 77 },
-      { year: "2026", value: 81 },
+      { year: "2026", value: 42, partial: true },
     ],
   },
 };
@@ -36,8 +38,8 @@ export default function TrendChart({ accent, variant }: Props) {
   const ds = datasets[variant];
   const MAX = Math.max(...ds.rows.map(r => r.value)) * 1.15;
   const first = ds.rows[0].value;
-  const last = ds.rows[ds.rows.length - 1].value;
-  const diff = last - first;
+  const peakRow = ds.rows[ds.rows.length - 2]; // last full year (2025)
+  const diff = peakRow.value - first;
   const pct = Math.round((diff / first) * 100);
 
   return (
@@ -58,7 +60,7 @@ export default function TrendChart({ accent, variant }: Props) {
       <div style={{ display: "flex", gap: 12, alignItems: "flex-end", height: CHART_H }}>
         {ds.rows.map((d, i) => {
           const barH = (d.value / MAX) * CHART_H;
-          const isLast = i === ds.rows.length - 1;
+          const isPeak = i === ds.rows.length - 2;
           return (
             <div key={d.year} style={{ display: "flex", flexDirection: "column", alignItems: "center", flex: 1 }}>
               <motion.span
@@ -67,11 +69,11 @@ export default function TrendChart({ accent, variant }: Props) {
                 transition={{ delay: 0.6 + i * 0.1 }}
                 style={{
                   fontSize: 11, fontWeight: 700, marginBottom: 5,
-                  color: isLast ? accent : "rgba(255,255,255,0.35)",
-                  textShadow: isLast ? `0 0 10px ${accent}` : "none",
+                  color: d.partial ? "rgba(255,255,255,0.22)" : isPeak ? accent : "rgba(255,255,255,0.35)",
+                  textShadow: isPeak ? `0 0 10px ${accent}` : "none",
                 }}
               >
-                {d.value}{ds.unit}
+                {d.partial ? "…" : `${d.value}${ds.unit}`}
               </motion.span>
               <motion.div
                 initial={{ height: 0 }}
@@ -80,10 +82,14 @@ export default function TrendChart({ accent, variant }: Props) {
                 style={{
                   width: "100%",
                   borderRadius: "6px 6px 4px 4px",
-                  background: isLast
+                  background: d.partial
+                    ? `repeating-linear-gradient(45deg, ${accent}22 0px, ${accent}22 3px, transparent 3px, transparent 7px)`
+                    : isPeak
                     ? `linear-gradient(180deg, ${accent} 0%, ${accent}88 100%)`
-                    : `rgba(255,255,255,${0.07 + i * 0.03})`,
-                  boxShadow: isLast ? `0 0 14px ${accent}99, 0 0 36px ${accent}44` : "none",
+                    : `rgba(255,255,255,${0.07 + i * 0.025})`,
+                  border: d.partial ? `1px dashed ${accent}55` : "none",
+                  boxShadow: isPeak ? `0 0 14px ${accent}99, 0 0 36px ${accent}44` : "none",
+                  opacity: d.partial ? 0.7 : 1,
                 }}
               />
             </div>
@@ -94,8 +100,8 @@ export default function TrendChart({ accent, variant }: Props) {
       {/* Year labels */}
       <div style={{ display: "flex", gap: 12, marginTop: 8 }}>
         {ds.rows.map((d) => (
-          <span key={d.year} style={{ flex: 1, textAlign: "center", fontSize: 10, color: "rgba(255,255,255,0.28)", fontWeight: 500 }}>
-            {d.year}
+          <span key={d.year} style={{ flex: 1, textAlign: "center", fontSize: 10, color: d.partial ? "rgba(255,255,255,0.18)" : "rgba(255,255,255,0.28)", fontWeight: 500 }}>
+            {d.year}{d.partial ? "*" : ""}
           </span>
         ))}
       </div>

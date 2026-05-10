@@ -5,11 +5,12 @@ import { motion } from "framer-motion";
 type Props = { accent: string };
 
 const data = [
-  { year: "2022", value: 100 },
-  { year: "2023", value: 118 },
-  { year: "2024", value: 142 },
-  { year: "2025", value: 158 },
-  { year: "2026", value: 170 },
+  { year: "2021", value: 100, partial: false },
+  { year: "2022", value: 112, partial: false },
+  { year: "2023", value: 130, partial: false },
+  { year: "2024", value: 148, partial: false },
+  { year: "2025", value: 170, partial: false },
+  { year: "2026", value: 88,  partial: true  },
 ];
 
 const MAX = 185;
@@ -34,7 +35,7 @@ export default function RevenueChart({ accent }: Props) {
       <div style={{ display: "flex", gap: 12, alignItems: "flex-end", height: CHART_H }}>
         {data.map((d, i) => {
           const barH = (d.value / MAX) * CHART_H;
-          const isLast = i === data.length - 1;
+          const isPeak = i === data.length - 2; // 2025 is the peak full year
           return (
             <div key={d.year} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 0, flex: 1 }}>
               <motion.span
@@ -43,11 +44,11 @@ export default function RevenueChart({ accent }: Props) {
                 transition={{ delay: 0.6 + i * 0.1 }}
                 style={{
                   fontSize: 11, fontWeight: 700, marginBottom: 5,
-                  color: isLast ? accent : "rgba(255,255,255,0.35)",
-                  textShadow: isLast ? `0 0 10px ${accent}` : "none",
+                  color: d.partial ? "rgba(255,255,255,0.22)" : isPeak ? accent : "rgba(255,255,255,0.35)",
+                  textShadow: isPeak ? `0 0 10px ${accent}` : "none",
                 }}
               >
-                {d.value}%
+                {d.partial ? "…" : `${d.value}%`}
               </motion.span>
               <motion.div
                 initial={{ height: 0 }}
@@ -56,10 +57,14 @@ export default function RevenueChart({ accent }: Props) {
                 style={{
                   width: "100%",
                   borderRadius: "6px 6px 4px 4px",
-                  background: isLast
+                  background: d.partial
+                    ? `repeating-linear-gradient(45deg, ${accent}22 0px, ${accent}22 3px, transparent 3px, transparent 7px)`
+                    : isPeak
                     ? `linear-gradient(180deg, ${accent} 0%, ${accent}99 100%)`
                     : "rgba(255,255,255,0.11)",
-                  boxShadow: isLast ? `0 0 14px ${accent}99, 0 0 36px ${accent}44` : "none",
+                  border: d.partial ? `1px dashed ${accent}55` : "none",
+                  boxShadow: isPeak ? `0 0 14px ${accent}99, 0 0 36px ${accent}44` : "none",
+                  opacity: d.partial ? 0.7 : 1,
                 }}
               />
             </div>
@@ -70,8 +75,8 @@ export default function RevenueChart({ accent }: Props) {
       {/* Year labels */}
       <div style={{ display: "flex", gap: 12, marginTop: 8 }}>
         {data.map((d) => (
-          <span key={d.year} style={{ flex: 1, textAlign: "center", fontSize: 10, color: "rgba(255,255,255,0.28)", fontWeight: 500 }}>
-            {d.year}
+          <span key={d.year} style={{ flex: 1, textAlign: "center", fontSize: 10, color: d.partial ? "rgba(255,255,255,0.18)" : "rgba(255,255,255,0.28)", fontWeight: 500 }}>
+            {d.year}{d.partial ? "*" : ""}
           </span>
         ))}
       </div>
@@ -88,7 +93,7 @@ export default function RevenueChart({ accent }: Props) {
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={accent} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <path d="M23 6l-9.5 9.5-5-5L1 18" /><path d="M17 6h6v6" />
           </svg>
-          <span style={{ fontSize: 12, fontWeight: 700, color: accent }}>+70% in 4 Jahren</span>
+          <span style={{ fontSize: 12, fontWeight: 700, color: accent }}>+70% seit 2021</span>
         </div>
       </div>
     </div>

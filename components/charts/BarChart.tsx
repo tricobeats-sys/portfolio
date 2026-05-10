@@ -3,11 +3,12 @@
 import { motion } from "framer-motion";
 
 const data = [
-  { year: "22", value: 18 },
-  { year: "23", value: 26 },
-  { year: "24", value: 34 },
-  { year: "25", value: 44 },
-  { year: "26", value: 52 },
+  { year: "21", value: 12,  partial: false },
+  { year: "22", value: 18,  partial: false },
+  { year: "23", value: 26,  partial: false },
+  { year: "24", value: 34,  partial: false },
+  { year: "25", value: 44,  partial: false },
+  { year: "26", value: 26,  partial: true  },
 ];
 
   const MAX = 56;
@@ -117,12 +118,14 @@ export default function BarChart({ accent }: Props) {
           <motion.circle
             key={i}
             cx={p.x} cy={p.y} r={4}
-            fill="#07090f"
+            fill={data[i].partial ? "transparent" : "#07090f"}
             stroke={accent}
             strokeWidth={2}
+            strokeDasharray={data[i].partial ? "3 2" : "none"}
+            opacity={data[i].partial ? 0.55 : 1}
             filter={`url(#${filterId})`}
             initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
+            animate={{ scale: 1, opacity: data[i].partial ? 0.55 : 1 }}
             transition={{ delay: 0.8 + i * 0.05, duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
             style={{ transformOrigin: `${p.x}px ${p.y}px` }}
           />
@@ -131,8 +134,8 @@ export default function BarChart({ accent }: Props) {
         {/* Year labels */}
         {pts.map((p, i) => (
           <text key={i} x={p.x} y={H - 4} textAnchor="middle"
-            fontSize={10} fill="rgba(255,255,255,0.28)" fontWeight={500}>
-            {p.year}
+            fontSize={10} fill={data[i].partial ? "rgba(255,255,255,0.18)" : "rgba(255,255,255,0.28)"} fontWeight={500}>
+            {p.year}{data[i].partial ? "*" : ""}
           </text>
         ))}
       </svg>
