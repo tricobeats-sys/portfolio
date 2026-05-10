@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Track } from "@/data/slides";
 
@@ -9,6 +9,14 @@ type Props = { onChoose: (track: Track) => void };
 export default function LandingScreen({ onChoose }: Props) {
   const [chosen,  setChosen]  = useState<Track | null>(null);
   const [hovered, setHovered] = useState<Track | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   const pick = (id: Track) => {
     if (chosen) return;
@@ -84,7 +92,10 @@ export default function LandingScreen({ onChoose }: Props) {
       </motion.div>
 
       {/* Content — left aligned */}
-      <div className="relative z-10 flex-1 flex flex-col items-start justify-center text-left px-6 md:pl-[clamp(40px,7vw,100px)] md:pr-[52vw]">
+      <div className="relative z-10 flex-1 flex flex-col items-start justify-center text-left" style={{
+        paddingLeft:  isMobile ? "24px" : "clamp(60px, 10vw, 140px)",
+        paddingRight: isMobile ? "24px" : "52vw",
+      }}>
 
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -110,7 +121,7 @@ export default function LandingScreen({ onChoose }: Props) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.48, duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
           style={{
-            fontSize: "clamp(1.8rem, 5vw, 2.5rem)",
+            fontSize: isMobile ? "clamp(1.8rem, 7vw, 2.2rem)" : "clamp(2.4rem, 3.5vw, 3.5rem)",
             letterSpacing: "-0.025em",
             fontWeight: 700,
             color: "#fff",
