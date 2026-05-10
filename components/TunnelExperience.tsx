@@ -169,10 +169,18 @@ export default function TunnelExperience({ track, onSwitch }: Props) {
 
       {/* ── Content ── */}
       <div className="absolute inset-0 flex items-center justify-center"
-        style={{ padding: isMobile ? "72px 24px 64px" : "112px 40px 96px", transformStyle: "preserve-3d" }}>
+        style={{
+          padding: slide.category === "map" ? 0 : (isMobile ? "72px 24px 64px" : "112px 40px 96px"),
+          transformStyle: "preserve-3d",
+        }}>
         <AnimatePresence mode="wait">
           <motion.div key={slide.id} variants={warpVariants} initial="enter" animate="center" exit="exit"
-            className="w-full max-w-6xl" style={{ willChange: "transform, opacity, filter" }}>
+            style={{
+              willChange: "transform, opacity, filter",
+              ...(slide.category === "map"
+                ? { width: "100%", height: "100%", maxWidth: "unset" }
+                : { width: "100%", maxWidth: "72rem" }),
+            }}>
 
             {hasChart ? (
               /* ── Achievement: split layout ── */
@@ -208,27 +216,9 @@ export default function TunnelExperience({ track, onSwitch }: Props) {
               </div>
 
             ) : slide.category === "map" ? (
-              /* ── Full-screen city map ── */
-              <div style={{ position: "fixed", inset: 0, zIndex: 1, overflow: "hidden" }}>
+              /* ── Full-screen Germany Map (no text) ── */
+              <div style={{ position: "absolute", inset: 0 }}>
                 <GermanyMap accent={slide.accent} />
-                {/* Subtle vignette */}
-                <div style={{
-                  position: "absolute", inset: 0, pointerEvents: "none",
-                  background: "radial-gradient(ellipse 85% 80% at 50% 50%, transparent 40%, #07090fcc 100%)",
-                }} />
-                {/* Badge bottom center */}
-                <div style={{ position: "absolute", bottom: 72, left: "50%", transform: "translateX(-50%)", zIndex: 10 }}>
-                  <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 2.5, duration: 0.6 }}
-                    style={{ display: "flex", alignItems: "center", gap: 8,
-                      padding: "10px 20px", borderRadius: 999,
-                      background: "rgba(7,9,15,0.75)", backdropFilter: "blur(12px)",
-                      border: `1px solid ${slide.accent}50`,
-                      boxShadow: `0 0 20px ${slide.accent}30` }}>
-                    <span style={{ fontSize: 13, fontWeight: 800, color: slide.accent, letterSpacing: "-0.01em" }}>20 Standorte</span>
-                    <span style={{ fontSize: 13, color: "rgba(255,255,255,0.45)", fontWeight: 500 }}>— München ist der nächste Schritt</span>
-                  </motion.div>
-                </div>
               </div>
 
             ) : slide.category === "closing" ? (
