@@ -92,6 +92,19 @@ export default function TunnelExperience({ track, onSwitch }: Props) {
     setTimeout(() => setLocked(false), 750);
   }, [index, locked, slides.length]);
 
+  // Touch swipe
+  const touchStartX = useMotionValue(0);
+  useEffect(() => {
+    const onStart = (e: TouchEvent) => { touchStartX.set(e.touches[0].clientX); };
+    const onEnd = (e: TouchEvent) => {
+      const diff = touchStartX.get() - e.changedTouches[0].clientX;
+      if (Math.abs(diff) > 50) advance(diff > 0 ? 1 : -1);
+    };
+    window.addEventListener("touchstart", onStart);
+    window.addEventListener("touchend", onEnd);
+    return () => { window.removeEventListener("touchstart", onStart); window.removeEventListener("touchend", onEnd); };
+  }, [advance, touchStartX]);
+
   useEffect(() => {
     const h = (e: KeyboardEvent) => {
       if (["ArrowRight","ArrowDown"," "].includes(e.key)) { e.preventDefault(); advance(1); }
@@ -146,7 +159,7 @@ export default function TunnelExperience({ track, onSwitch }: Props) {
         style={{ background: `radial-gradient(ellipse 45% 35% at 50% 50%, transparent 35%, ${slide.accent}10 68%, transparent 100%)` }} />
 
       {/* ── Content ── */}
-      <div className="absolute inset-0 flex items-center justify-center px-10 pt-28 pb-24"
+      <div className="absolute inset-0 flex items-center justify-center px-4 md:px-10 pt-20 md:pt-28 pb-20 md:pb-24 overflow-y-auto"
         style={{ transformStyle: "preserve-3d" }}>
         <AnimatePresence mode="wait">
           <motion.div key={slide.id} variants={warpVariants} initial="enter" animate="center" exit="exit"
@@ -154,32 +167,34 @@ export default function TunnelExperience({ track, onSwitch }: Props) {
 
             {hasChart ? (
               /* ── Achievement: split layout ── */
-              <div className="flex flex-col md:flex-row items-center gap-10 md:gap-16" style={{ justifyContent: "space-between" }}>
-                <div style={{ flex: "0 1 420px", display: "flex", flexDirection: "column", alignItems: "flex-start", textAlign: "left", minWidth: 0 }}>
+              <div className="flex flex-col md:flex-row items-center gap-8 md:gap-16" style={{ justifyContent: "space-between" }}>
+                <div style={{ flex: "0 1 420px", display: "flex", flexDirection: "column", alignItems: "flex-start", textAlign: "left", minWidth: 0, width: "100%" }}>
                   <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.28, duration: 0.35 }}
-                    style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 28 }}>
+                    style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
                     <span style={{ height: 1, width: 20, opacity: 0.4, background: slide.accent, display: "block" }} />
                     <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", color: slide.accent }}>{slide.number}</span>
                     <span style={{ fontSize: 11, fontWeight: 500, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.38)" }}>{slide.eyebrow}</span>
                   </motion.div>
                   <motion.h1 initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.34, duration: 0.45 }}
-                    style={{ fontWeight: 900, color: "#fff", lineHeight: 1.0, marginBottom: 24,
-                      fontSize: "clamp(2rem, 3.6vw, 3.6rem)", whiteSpace: "pre-line",
+                    style={{ fontWeight: 900, color: "#fff", lineHeight: 1.0, marginBottom: 16,
+                      fontSize: "clamp(1.9rem, 5vw, 3.6rem)", whiteSpace: "pre-line",
                       textShadow: `0 0 60px ${slide.accent}55` }}>
                     <HighlightedText text={slide.headline} highlights={slide.highlights} accent={slide.accent} />
                   </motion.h1>
                   <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.44, duration: 0.4 }}
-                    style={{ color: "rgba(255,255,255,0.45)", lineHeight: 1.85, fontSize: 15, maxWidth: 360 }}>
+                    style={{ color: "rgba(255,255,255,0.45)", lineHeight: 1.85, fontSize: 14, maxWidth: 360 }}>
                     {slide.sub}
                   </motion.p>
                 </div>
                 <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 0.4, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-                  className="flex-shrink-0 flex items-center justify-center" style={{ marginLeft: "auto" }}>
-                  <SlideChart slideId={slide.id} accent={slide.accent} />
+                  className="flex-shrink-0 flex items-center justify-center w-full md:w-auto" style={{ marginLeft: 0 }}>
+                  <div className="w-full overflow-x-auto flex justify-center md:justify-end">
+                    <SlideChart slideId={slide.id} accent={slide.accent} />
+                  </div>
                 </motion.div>
               </div>
 
@@ -257,18 +272,18 @@ export default function TunnelExperience({ track, onSwitch }: Props) {
               /* ── Phases: 3 columns ── */
               <div style={{ width: "100%", maxWidth: 900, margin: "0 auto" }}>
                 <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2, duration: 0.4 }} style={{ marginBottom: 56, textAlign: "center" }}>
+                  transition={{ delay: 0.2, duration: 0.4 }} style={{ marginBottom: 32, textAlign: "center" }}>
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, marginBottom: 16 }}>
                     <span style={{ height: 1, width: 20, opacity: 0.4, background: slide.accent, display: "block" }} />
                     <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", color: slide.accent }}>{slide.number}</span>
                     <span style={{ fontSize: 11, fontWeight: 500, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.38)" }}>{slide.eyebrow}</span>
                     <span style={{ height: 1, width: 20, opacity: 0.4, background: slide.accent, display: "block" }} />
                   </div>
-                  <h1 style={{ fontWeight: 900, color: "#fff", lineHeight: 1.0, fontSize: "clamp(1.8rem, 3.2vw, 3.2rem)", whiteSpace: "pre-line", textShadow: `0 0 60px ${slide.accent}55` }}>
-                  <HighlightedText text={slide.headline} highlights={slide.highlights} accent={slide.accent} />
+                  <h1 style={{ fontWeight: 900, color: "#fff", lineHeight: 1.0, fontSize: "clamp(1.6rem, 3.2vw, 3.2rem)", whiteSpace: "pre-line", textShadow: `0 0 60px ${slide.accent}55` }}>
+                    <HighlightedText text={slide.headline} highlights={slide.highlights} accent={slide.accent} />
                   </h1>
                 </motion.div>
-                <div style={{ display: "flex", gap: 16 }}>
+                <div className="flex flex-col md:flex-row" style={{ gap: 12 }}>
                   {slide.phases?.map((phase, i) => (
                     <motion.div key={phase.title} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.45 + i * 0.22, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
@@ -277,13 +292,13 @@ export default function TunnelExperience({ track, onSwitch }: Props) {
                         background: "rgba(255,255,255,0.03)",
                         border: `1px solid ${slide.accent}30`,
                         borderRadius: 20,
-                        padding: "28px 24px",
+                        padding: "24px 20px",
                         boxShadow: `0 0 18px ${slide.accent}20, 0 0 60px ${slide.accent}0a, inset 0 0 30px ${slide.accent}05`,
                       }}>
-                      <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.2em", color: slide.accent, display: "block", marginBottom: 12 }}>0{i + 1}</span>
-                      <h3 style={{ fontSize: 17, fontWeight: 800, color: "#fff", marginBottom: 20, letterSpacing: "-0.01em" }}>{phase.title}</h3>
-                      <div style={{ width: 28, height: 1, background: `${slide.accent}50`, marginBottom: 20 }} />
-                      <div style={{ display: "flex", flexDirection: "column", gap: 11 }}>
+                      <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.2em", color: slide.accent, display: "block", marginBottom: 10 }}>0{i + 1}</span>
+                      <h3 style={{ fontSize: 16, fontWeight: 800, color: "#fff", marginBottom: 16, letterSpacing: "-0.01em" }}>{phase.title}</h3>
+                      <div style={{ width: 28, height: 1, background: `${slide.accent}50`, marginBottom: 16 }} />
+                      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                         {phase.bullets.map((b, j) => (
                           <div key={j} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
                             <span style={{ color: slide.accent, fontSize: 11, marginTop: 4, flexShrink: 0 }}>▸</span>
@@ -364,15 +379,15 @@ export default function TunnelExperience({ track, onSwitch }: Props) {
           <motion.div className="absolute left-0 top-0 h-full" style={{ background: slide.accent }}
             animate={{ width: `${progress * 100}%` }} transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }} />
         </div>
-        <div className="flex items-center justify-between" style={{ padding: "16px 40px" }}>
+        <div className="flex items-center justify-between px-4 md:px-10 py-3 md:py-4">
           <div style={{ width: 44 }} />
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2">
             {slides.map((_, i) => (
               <button key={i}
                 onClick={() => { if (!locked) { setIndex(i); setFlash(true); setTimeout(() => setFlash(false), 140); } }}
-                aria-label={`Folie ${i + 1}`} className="flex items-center justify-center" style={{ width: 24, height: 24 }}>
+                aria-label={`Folie ${i + 1}`} className="flex items-center justify-center" style={{ width: 20, height: 20 }}>
                 <div className="rounded-full transition-all duration-300"
-                  style={{ width: i === index ? 22 : 6, height: 6,
+                  style={{ width: i === index ? 18 : 5, height: 5,
                     background: i === index ? slide.accent : "rgba(255,255,255,0.2)",
                     boxShadow: i === index ? `0 0 8px ${slide.accent}` : "none" }} />
               </button>
@@ -382,15 +397,15 @@ export default function TunnelExperience({ track, onSwitch }: Props) {
         </div>
       </div>
 
-      {/* ── Side arrows ── */}
-      <div className="absolute left-0 z-30" style={{ top: "50%", transform: "translateY(-50%)", paddingLeft: 20 }}>
+      {/* ── Side arrows — desktop only ── */}
+      <div className="hidden md:block absolute left-0 z-30" style={{ top: "50%", transform: "translateY(-50%)", paddingLeft: 20 }}>
         <NeonIconButton onClick={() => advance(-1)} disabled={isFirst || locked} glowColor={`${slide.accent}99`}>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transform: "rotate(180deg)" }}>
             <path d="M9 5l7 7-7 7" />
           </svg>
         </NeonIconButton>
       </div>
-      <div className="absolute right-0 z-30" style={{ top: "50%", transform: "translateY(-50%)", paddingRight: 20 }}>
+      <div className="hidden md:block absolute right-0 z-30" style={{ top: "50%", transform: "translateY(-50%)", paddingRight: 20 }}>
         <NeonIconButton onClick={() => advance(1)} disabled={isLast || locked} glowColor={`${slide.accent}cc`} filled={!isLast} fillColor={slide.accent}>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <path d="M9 5l7 7-7 7" />
@@ -401,10 +416,19 @@ export default function TunnelExperience({ track, onSwitch }: Props) {
       {index === 0 && !locked && (
         <motion.p initial={{ opacity: 0 }} animate={{ opacity: [0, 0.3, 0] }}
           transition={{ delay: 2, duration: 2.5, repeat: 2 }}
-          className="absolute pointer-events-none whitespace-nowrap"
+          className="absolute pointer-events-none whitespace-nowrap hidden md:block"
           style={{ bottom: 76, left: "50%", transform: "translateX(-50%)",
             color: "rgba(255,255,255,0.22)", fontSize: 10, letterSpacing: "0.2em", textTransform: "uppercase" }}>
           Pfeiltaste oder Klick →
+        </motion.p>
+      )}
+      {index === 0 && !locked && (
+        <motion.p initial={{ opacity: 0 }} animate={{ opacity: [0, 0.3, 0] }}
+          transition={{ delay: 2, duration: 2.5, repeat: 2 }}
+          className="absolute pointer-events-none whitespace-nowrap md:hidden"
+          style={{ bottom: 70, left: "50%", transform: "translateX(-50%)",
+            color: "rgba(255,255,255,0.22)", fontSize: 10, letterSpacing: "0.2em", textTransform: "uppercase" }}>
+          Wischen →
         </motion.p>
       )}
     </div>

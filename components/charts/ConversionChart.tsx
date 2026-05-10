@@ -17,7 +17,8 @@ export default function ConversionChart({ accent }: Props) {
       border: `1px solid ${accent}55`,
       borderRadius: 20,
       padding: "22px 28px 20px",
-      width: 340,
+      width: "100%",
+      maxWidth: 340,
       boxShadow: `0 0 18px ${accent}40, 0 0 60px ${accent}18, inset 0 0 30px ${accent}06`,
     }}>
       <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", marginBottom: 24 }}>

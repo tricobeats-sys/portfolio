@@ -46,13 +46,15 @@ export default function BarChart({ accent }: Props) {
       border: `1px solid ${accent}55`,
       borderRadius: 20,
       padding: "22px 24px 16px",
+      width: "100%",
+      maxWidth: W,
       boxShadow: `0 0 18px ${accent}40, 0 0 60px ${accent}18, inset 0 0 30px ${accent}06`,
     }}>
       <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", marginBottom: 16 }}>
         Vermittlungen pro Jahr
       </p>
 
-      <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} overflow="visible">
+      <svg width="100%" height={H} viewBox={`0 0 ${W} ${H}`} overflow="visible">
         <defs>
           <filter id={filterId} x="-30%" y="-30%" width="160%" height="160%">
             <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur" />

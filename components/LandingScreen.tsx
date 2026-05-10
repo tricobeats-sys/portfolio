@@ -41,25 +41,17 @@ export default function LandingScreen({ onChoose }: Props) {
         bottom: "5%", right: "15%",
       }} />
 
-      {/* Portrait — right side, blending into dark bg */}
-      <div className="absolute pointer-events-none" style={{
-        right: 0,
-        bottom: 0,
-        width: "46vw",
-        maxWidth: 600,
-        height: "95vh",
+      {/* Portrait — right side, only on desktop */}
+      <div className="hidden md:block absolute pointer-events-none" style={{
+        right: 0, bottom: 0, width: "46vw", maxWidth: 600, height: "95vh",
         mixBlendMode: "screen",
         WebkitMaskImage: "radial-gradient(ellipse 72% 82% at 50% 48%, black 15%, rgba(0,0,0,0.85) 40%, rgba(0,0,0,0.4) 62%, transparent 78%)",
         maskImage: "radial-gradient(ellipse 72% 82% at 50% 48%, black 15%, rgba(0,0,0,0.85) 40%, rgba(0,0,0,0.4) 62%, transparent 78%)",
-        opacity: 0.75,
-        filter: "contrast(1.6) brightness(0.55) saturate(0.7)",
+        opacity: 0.75, filter: "contrast(1.6) brightness(0.55) saturate(0.7)",
       }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/portrait.png"
-          alt=""
-          style={{ width: "100%", height: "100%", objectFit: "contain", objectPosition: "right bottom" }}
-        />
+        <img src="/portrait.png" alt=""
+          style={{ width: "100%", height: "100%", objectFit: "contain", objectPosition: "right bottom" }} />
       </div>
 
       {/* Grain */}
@@ -76,7 +68,7 @@ export default function LandingScreen({ onChoose }: Props) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.45 }}
         className="relative z-20 flex justify-end"
-        style={{ padding: "28px 40px" }}
+        style={{ padding: "20px 20px" }}
       >
         <GlowButton
           as="a"
@@ -92,7 +84,7 @@ export default function LandingScreen({ onChoose }: Props) {
       </motion.div>
 
       {/* Content — left aligned */}
-      <div className="relative z-10 flex-1 flex flex-col items-start justify-center text-left" style={{ paddingLeft: "clamp(40px, 7vw, 100px)", paddingRight: "52vw" }}>
+      <div className="relative z-10 flex-1 flex flex-col items-start justify-center text-left px-6 md:pl-[clamp(40px,7vw,100px)] md:pr-[52vw]">
 
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -118,12 +110,12 @@ export default function LandingScreen({ onChoose }: Props) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.48, duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
           style={{
-            fontSize: "clamp(1.5rem, 2.5vw, 2.5rem)",
+            fontSize: "clamp(1.8rem, 5vw, 2.5rem)",
             letterSpacing: "-0.025em",
             fontWeight: 700,
             color: "#fff",
-            lineHeight: 1.1,
-            marginBottom: 56,
+            lineHeight: 1.15,
+            marginBottom: 40,
           }}
         >
           Viele Möglichkeiten.
@@ -137,7 +129,7 @@ export default function LandingScreen({ onChoose }: Props) {
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.72, duration: 0.5 }}
-          style={{ display: "flex", flexDirection: "row", gap: 16, maxWidth: 400 }}
+          style={{ display: "flex", flexDirection: "row", gap: 12, width: "100%", maxWidth: 380 }}
         >
           <GlowButton
             onClick={() => pick("achievements")}
