@@ -219,7 +219,7 @@ function GlowButton({ as: Tag = "button", glowColor, primary, style, children, .
   };
 
   return (
-    // @ts-expect-error dynamic tag
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     <Tag
       {...rest}
       style={base}
