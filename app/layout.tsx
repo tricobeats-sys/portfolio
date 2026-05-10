@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Max Mustermann — Portfolio",
-  description: "Interaktiver Lebenslauf und Erfolge von Max Mustermann",
+  title: "Mike Hammer — Portfolio",
+  description: "Interaktiver Lebenslauf und Erfolge von Mike Hammer",
 };
 
 export default function RootLayout({
