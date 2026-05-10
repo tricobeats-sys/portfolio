@@ -186,7 +186,7 @@ export const goalSlides: Slide[] = [
     eyebrow: "Der Weg zum Ziel",
     headline: "Manchmal ist die Extrameile die Entscheidung zwischen Misserfolg und Erfolg.",
     sub: "",
-    highlights: ["Extrameile"],
+    highlights: [],
     quoteSmall: "Sie fühlt sich aber nicht wie eine Extrameile an …\n… if you do what you want.",
     bg: BG_CLOSE,
     accent: "#0e8045",

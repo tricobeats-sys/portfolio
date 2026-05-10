@@ -167,20 +167,28 @@ export default function TunnelExperience({ track, onSwitch }: Props) {
         transition={{ duration: 0.12 }}
         style={{ background: `radial-gradient(ellipse 45% 35% at 50% 50%, transparent 35%, ${slide.accent}10 68%, transparent 100%)` }} />
 
+      {/* ── Full-screen map overlay (rendered outside content flow) ── */}
+      <AnimatePresence>
+        {slide.category === "map" && (
+          <motion.div key="map-fullscreen"
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            transition={{ duration: 0.6 }}
+            style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, zIndex: 11 }}>
+            <GermanyMap accent={slide.accent} />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* ── Content ── */}
       <div className="absolute inset-0 flex items-center justify-center"
         style={{
-          padding: slide.category === "map" ? 0 : (isMobile ? "72px 24px 64px" : "112px 40px 96px"),
+          padding: isMobile ? "72px 24px 64px" : "112px 40px 96px",
           transformStyle: "preserve-3d",
         }}>
         <AnimatePresence mode="wait">
+          {slide.category !== "map" && (
           <motion.div key={slide.id} variants={warpVariants} initial="enter" animate="center" exit="exit"
-            style={{
-              willChange: "transform, opacity, filter",
-              ...(slide.category === "map"
-                ? { width: "100%", height: "100%", maxWidth: "unset" }
-                : { width: "100%", maxWidth: "72rem" }),
-            }}>
+            style={{ willChange: "transform, opacity, filter", width: "100%", maxWidth: "72rem" }}>
 
             {hasChart ? (
               /* ── Achievement: split layout ── */
@@ -213,12 +221,6 @@ export default function TunnelExperience({ track, onSwitch }: Props) {
                     <SlideChart slideId={slide.id} accent={slide.accent} />
                   </motion.div>
                 )}
-              </div>
-
-            ) : slide.category === "map" ? (
-              /* ── Full-screen Germany Map (no text) ── */
-              <div style={{ position: "absolute", inset: 0 }}>
-                <GermanyMap accent={slide.accent} />
               </div>
 
             ) : slide.category === "closing" ? (
@@ -356,14 +358,18 @@ export default function TunnelExperience({ track, onSwitch }: Props) {
                 <motion.h1 initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.34, duration: 0.5 }}
                   style={{ fontWeight: 900, color: "#fff", lineHeight: 1.1, marginBottom: 28,
-                    fontSize: isMobile ? "clamp(1.6rem, 6.5vw, 2.2rem)" : "clamp(2.5rem, 4.5vw, 4.5rem)",
+                    fontSize: isMobile ? "clamp(1.4rem, 5.5vw, 1.9rem)" : "clamp(1.8rem, 3vw, 3rem)",
                     textShadow: `0 0 70px ${slide.accent}55` }}>
                   <HighlightedText text={slide.headline} highlights={slide.highlights} accent={slide.accent} />
                 </motion.h1>
                 <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.5, duration: 0.4 }}
-                  style={{ color: "rgba(255,255,255,0.4)", fontSize: isMobile ? 15 : 17, lineHeight: 1.8, fontStyle: "italic", whiteSpace: "pre-line", textAlign: "center" }}>
-                  {slide.quoteSmall}
+                  style={{ fontSize: isMobile ? "clamp(1.4rem, 5.5vw, 1.9rem)" : "clamp(1.8rem, 3vw, 3rem)", lineHeight: 1.1, fontWeight: 900, textAlign: "center" }}>
+                  {slide.quoteSmall?.split("\n").map((line, i, arr) => (
+                    <span key={i} style={{ color: i === arr.length - 1 ? slide.accent : "#fff", display: "block" }}>
+                      {line}
+                    </span>
+                  ))}
                 </motion.p>
               </div>
 
@@ -403,6 +409,7 @@ export default function TunnelExperience({ track, onSwitch }: Props) {
             )}
 
           </motion.div>
+          )}
         </AnimatePresence>
       </div>
 

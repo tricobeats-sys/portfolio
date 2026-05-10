@@ -1,61 +1,79 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-const CITIES = [
-  { lat: 48.1351, lng: 11.5820, name: "München",    r: 14, highlight: true  },
-  { lat: 53.5753, lng: 10.0153, name: "Hamburg",    r: 7  },
-  { lat: 52.5200, lng: 13.4050, name: "Berlin",     r: 8  },
-  { lat: 50.1109, lng:  8.6821, name: "Frankfurt",  r: 7  },
-  { lat: 50.9333, lng:  6.9500, name: "Köln",       r: 6  },
-  { lat: 48.7758, lng:  9.1829, name: "Stuttgart",  r: 6  },
-  { lat: 51.2217, lng:  6.7762, name: "Düsseldorf", r: 5  },
-  { lat: 51.0504, lng: 13.7373, name: "Dresden",    r: 6  },
-  { lat: 51.3397, lng: 12.3731, name: "Leipzig",    r: 6  },
-  { lat: 49.4521, lng: 11.0767, name: "Nürnberg",   r: 6  },
-  { lat: 52.3759, lng:  9.7320, name: "Hannover",   r: 5  },
-  { lat: 53.0793, lng:  8.8017, name: "Bremen",     r: 5  },
-  { lat: 51.5136, lng:  7.4653, name: "Dortmund",   r: 5  },
-  { lat: 49.4875, lng:  8.4660, name: "Mannheim",   r: 5  },
-  { lat: 47.9990, lng:  7.8421, name: "Freiburg",   r: 5  },
-  { lat: 54.0924, lng: 12.0991, name: "Rostock",    r: 5  },
-  { lat: 50.9848, lng: 11.0299, name: "Erfurt",     r: 5  },
-  { lat: 48.3705, lng: 10.8978, name: "Augsburg",   r: 5  },
-  { lat: 49.0134, lng: 12.1016, name: "Regensburg", r: 5  },
-  { lat: 49.7944, lng:  9.9294, name: "Würzburg",   r: 5  },
+
+// 20 real Munich locations + ~25 smaller background dots for visual density
+const LOCATIONS = [
+  // Main 20 locations (larger dots)
+  { lat: 48.1351, lng: 11.5820, r: 14, main: true  }, // Marienplatz
+  { lat: 48.1400, lng: 11.5600, r: 10, main: true  }, // Maxvorstadt
+  { lat: 48.1270, lng: 11.5800, r: 9,  main: true  }, // Sendling
+  { lat: 48.1500, lng: 11.5900, r: 10, main: true  }, // Schwabing
+  { lat: 48.1450, lng: 11.6100, r: 8,  main: true  }, // Bogenhausen
+  { lat: 48.1200, lng: 11.5600, r: 9,  main: true  }, // Thalkirchen
+  { lat: 48.1600, lng: 11.5700, r: 8,  main: true  }, // Milbertshofen
+  { lat: 48.1300, lng: 11.5400, r: 9,  main: true  }, // Laim
+  { lat: 48.1550, lng: 11.5400, r: 8,  main: true  }, // Neuhausen
+  { lat: 48.1100, lng: 11.5900, r: 9,  main: true  }, // Untergiesing
+  { lat: 48.1380, lng: 11.6300, r: 7,  main: true  }, // Riem
+  { lat: 48.1250, lng: 11.6100, r: 9,  main: true  }, // Giesing
+  { lat: 48.1480, lng: 11.5200, r: 8,  main: true  }, // Nymphenburg
+  { lat: 48.1700, lng: 11.5800, r: 8,  main: true  }, // Schwabing Nord
+  { lat: 48.1350, lng: 11.5500, r: 10, main: true  }, // Westend
+  { lat: 48.1430, lng: 11.5950, r: 9,  main: true  }, // Haidhausen
+  { lat: 48.1200, lng: 11.6200, r: 8,  main: true  }, // Berg am Laim
+  { lat: 48.1600, lng: 11.6100, r: 7,  main: true  }, // Johanneskirchen
+  { lat: 48.1050, lng: 11.5700, r: 8,  main: true  }, // Obersendling
+  { lat: 48.1150, lng: 11.5500, r: 7,  main: true  }, // Pasing
+  // Background ambient dots
+  { lat: 48.1370, lng: 11.5750, r: 5,  main: false },
+  { lat: 48.1320, lng: 11.5870, r: 4,  main: false },
+  { lat: 48.1410, lng: 11.5720, r: 5,  main: false },
+  { lat: 48.1280, lng: 11.5650, r: 4,  main: false },
+  { lat: 48.1460, lng: 11.5850, r: 5,  main: false },
+  { lat: 48.1330, lng: 11.6000, r: 4,  main: false },
+  { lat: 48.1520, lng: 11.5650, r: 4,  main: false },
+  { lat: 48.1240, lng: 11.5750, r: 5,  main: false },
+  { lat: 48.1580, lng: 11.6000, r: 4,  main: false },
+  { lat: 48.1180, lng: 11.5850, r: 4,  main: false },
+  { lat: 48.1390, lng: 11.6150, r: 5,  main: false },
+  { lat: 48.1650, lng: 11.5850, r: 4,  main: false },
+  { lat: 48.1310, lng: 11.5300, r: 5,  main: false },
+  { lat: 48.1440, lng: 11.5150, r: 4,  main: false },
+  { lat: 48.1080, lng: 11.5600, r: 4,  main: false },
+  { lat: 48.1750, lng: 11.5650, r: 4,  main: false },
 ];
 
 export default function GermanyMapLeaflet({ accent }: { accent: string }) {
-  const mapRef = useRef<HTMLDivElement>(null);
-  const mapInstanceRef = useRef<unknown>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<unknown>(null);
 
   useEffect(() => {
-    if (!mapRef.current || mapInstanceRef.current) return;
-
-    // Check if container was already initialized by Leaflet (React strict mode double-mount)
+    if (!containerRef.current || mapRef.current) return;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const container = mapRef.current as any;
-    if (container._leaflet_id) return;
+    const el = containerRef.current as any;
+    if (el._leaflet_id) return;
 
-    // Dynamic import to avoid SSR issues
     import("leaflet").then((L) => {
-      if (!mapRef.current || mapInstanceRef.current) return;
+      if (!containerRef.current || mapRef.current) return;
 
-      // Fix default icon path issue in Next.js
+      // Fix icon path
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       delete (L.Icon.Default.prototype as any)._getIconUrl;
 
-      const map = L.map(mapRef.current, {
-        center: [51.2, 10.5],
-        zoom: 6,
+      const map = L.map(containerRef.current, {
+        center: [48.137, 11.576],
+        zoom: 12,
         zoomControl: false,
         attributionControl: false,
         dragging: false,
         scrollWheelZoom: false,
         doubleClickZoom: false,
         touchZoom: false,
+        keyboard: false,
       });
 
-      mapInstanceRef.current = map;
+      mapRef.current = map;
 
       // CartoDB Dark Matter tiles
       L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
@@ -63,83 +81,125 @@ export default function GermanyMapLeaflet({ accent }: { accent: string }) {
         maxZoom: 19,
       }).addTo(map);
 
-      // Add cities with staggered delay
-      CITIES.forEach((city, i) => {
+      // Force size calculation with ResizeObserver + timeouts
+      const ro = new ResizeObserver(() => map.invalidateSize());
+      ro.observe(containerRef.current!);
+      [50, 200, 500, 1000].forEach(t => setTimeout(() => map.invalidateSize(), t));
+
+      // Add building icons with stagger
+      LOCATIONS.forEach((loc, i) => {
+        const delay = 1000 + i * 140;
+        const scale = loc.main ? 1 : 0.65;
+        const w = Math.round(18 * scale);
+        const h = Math.round(24 * scale);
+        const pulseDelay = delay + 500;
+
         setTimeout(() => {
-          if (city.highlight) {
-            // München: large pulsing ring + bright dot
-            const pulseIcon = L.divIcon({
-              className: "",
-              html: `
-                <div style="position:relative;width:60px;height:60px;transform:translate(-50%,-50%)">
-                  <div class="munich-ring"></div>
-                  <div class="munich-ring" style="animation-delay:0.7s"></div>
-                  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
-                    width:16px;height:16px;border-radius:50%;
-                    background:${accent};box-shadow:0 0 20px ${accent},0 0 40px ${accent}88,0 0 80px ${accent}44;"></div>
-                </div>
-              `,
-              iconSize: [60, 60],
-              iconAnchor: [30, 30],
-            });
-            L.marker([city.lat, city.lng], { icon: pulseIcon }).addTo(map);
-
-            // München label
-            const labelIcon = L.divIcon({
-              className: "",
-              html: `<div style="color:${accent};font-size:11px;font-weight:700;letter-spacing:0.1em;
-                white-space:nowrap;text-shadow:0 0 8px ${accent};margin-top:2px;font-family:system-ui">MÜNCHEN</div>`,
-              iconSize: [80, 20],
-              iconAnchor: [-8, -10],
-            });
-            L.marker([city.lat, city.lng], { icon: labelIcon }).addTo(map);
-          } else {
-            L.circleMarker([city.lat, city.lng], {
-              radius: city.r,
-              color: accent,
-              fillColor: accent,
-              fillOpacity: 0.7,
-              weight: 0,
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              className: "city-dot",
-            } as any).addTo(map);
-          }
-        }, 400 + i * 80);
+          const icon = L.divIcon({
+            className: "",
+            html: `
+              <div class="building-wrap" style="animation-delay:0ms">
+                ${loc.main ? `<div class="building-ring" style="animation-delay:${pulseDelay}ms"></div>` : ""}
+                <svg width="${w}" height="${h}" viewBox="0 0 18 24" xmlns="http://www.w3.org/2000/svg"
+                  style="filter:drop-shadow(0 0 ${loc.main ? 6 : 3}px ${accent}) drop-shadow(0 0 ${loc.main ? 12 : 5}px ${accent}88);
+                         animation:building-pulse 2.4s ease-in-out infinite;
+                         animation-delay:${pulseDelay}ms;">
+                  <!-- Left wing -->
+                  <rect x="0" y="10" width="5" height="14" fill="${accent}" opacity="0.75"/>
+                  <!-- Right wing -->
+                  <rect x="13" y="7" width="5" height="17" fill="${accent}" opacity="0.75"/>
+                  <!-- Main tower -->
+                  <rect x="4" y="0" width="10" height="24" fill="${accent}"/>
+                  <!-- Windows main -->
+                  <rect x="6"  y="3"  width="2" height="2" fill="#07090f" opacity="0.6"/>
+                  <rect x="10" y="3"  width="2" height="2" fill="#07090f" opacity="0.6"/>
+                  <rect x="6"  y="7"  width="2" height="2" fill="#07090f" opacity="0.6"/>
+                  <rect x="10" y="7"  width="2" height="2" fill="#07090f" opacity="0.6"/>
+                  <rect x="6"  y="11" width="2" height="2" fill="#07090f" opacity="0.6"/>
+                  <rect x="10" y="11" width="2" height="2" fill="#07090f" opacity="0.6"/>
+                  <!-- Windows side left -->
+                  <rect x="1"  y="12" width="1.5" height="1.5" fill="#07090f" opacity="0.5"/>
+                  <rect x="1"  y="15" width="1.5" height="1.5" fill="#07090f" opacity="0.5"/>
+                  <!-- Windows side right -->
+                  <rect x="14.5" y="9"  width="1.5" height="1.5" fill="#07090f" opacity="0.5"/>
+                  <rect x="14.5" y="12" width="1.5" height="1.5" fill="#07090f" opacity="0.5"/>
+                </svg>
+              </div>
+            `,
+            iconSize: [w, h],
+            iconAnchor: [w / 2, h],
+          });
+          L.marker([loc.lat, loc.lng], { icon }).addTo(map);
+        }, delay);
       });
-    });
 
-    return () => {
-      if (mapInstanceRef.current) {
+      // München label
+      setTimeout(() => {
+        const icon = L.divIcon({
+          className: "",
+          html: `<div style="
+            color:${accent};font-size:10px;font-weight:700;
+            letter-spacing:0.12em;white-space:nowrap;
+            text-shadow:0 0 8px ${accent},0 0 16px ${accent}88;
+            font-family:system-ui,sans-serif;
+          ">MÜNCHEN</div>`,
+          iconSize: [80, 14],
+          iconAnchor: [-6, 20],
+        });
+        L.marker([48.1351, 11.5820], { icon }).addTo(map);
+      }, 1500);
+
+      // Cleanup
+      return () => {
+        ro.disconnect();
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (mapInstanceRef.current as any).remove();
-        mapInstanceRef.current = null;
-      }
-    };
+        (mapRef.current as any)?.remove();
+        mapRef.current = null;
+      };
+    });
   }, [accent]);
 
   return (
     <>
       <style>{`
-        .munich-ring {
-          position: absolute;
-          top: 50%; left: 50%;
-          transform: translate(-50%, -50%);
-          width: 60px; height: 60px;
-          border-radius: 50%;
-          border: 1.5px solid ${accent};
+        .leaflet-container { background: #0d1117 !important; }
+        .leaflet-tile-pane .leaflet-layer {
+          filter: brightness(0.85) saturate(1.1) hue-rotate(5deg);
+        }
+
+        .building-wrap {
+          position: relative;
+          display: flex; align-items: flex-end; justify-content: center;
           opacity: 0;
-          animation: munich-pulse 2.2s ease-out infinite;
+          transform: scale(0) translateY(8px);
+          animation: building-pop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
-        @keyframes munich-pulse {
-          0%   { transform: translate(-50%,-50%) scale(0.2); opacity: 0.8; }
-          100% { transform: translate(-50%,-50%) scale(1.8); opacity: 0; }
+        @keyframes building-pop {
+          0%   { opacity: 0; transform: scale(0) translateY(8px); }
+          100% { opacity: 1; transform: scale(1) translateY(0); }
         }
-        .city-dot {
-          filter: drop-shadow(0 0 6px ${accent}) drop-shadow(0 0 12px ${accent}88);
+
+        @keyframes building-pulse {
+          0%, 100% { opacity: 0.9; }
+          50%       { opacity: 1;   }
         }
-        .leaflet-container { background: #07090f !important; }
+
+        .building-ring {
+          position: absolute;
+          bottom: 0; left: 50%;
+          transform: translateX(-50%);
+          width: 20px; height: 20px;
+          border-radius: 50%;
+          border: 1px solid ${accent};
+          opacity: 0;
+          animation: ring-expand 2.4s ease-out infinite;
+        }
+        @keyframes ring-expand {
+          0%   { transform: translateX(-50%) scale(0.5); opacity: 0.8; }
+          100% { transform: translateX(-50%) scale(3);   opacity: 0;   }
+        }
       `}</style>
-      <div ref={mapRef} style={{ width: "100%", height: "100%", borderRadius: 0 }} />
+      <div ref={containerRef} style={{ width: "100%", height: "100%", minHeight: "100vh" }} />
     </>
   );
 }
