@@ -8,6 +8,7 @@ type Props = { onHome?: () => void };
 export default function Navbar({ onHome }: Props) {
   const [homHov, setHomHov] = useState(false);
   const [cvHov,  setCvHov]  = useState(false);
+  const [zwHov,  setZwHov]  = useState(false);
   const glow = "rgba(14,128,69,0.6)";
 
   return (
@@ -43,6 +44,36 @@ export default function Navbar({ onHome }: Props) {
         </svg>
       </button>
 
+      {/* Right side buttons */}
+      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+
+      {/* Zwischenzeugnis Download */}
+      <a
+        href="/Zwischenzeugnis.pdf"
+        download="Mike_Hammer_Zwischenzeugnis.pdf"
+        onMouseEnter={() => setZwHov(true)}
+        onMouseLeave={() => setZwHov(false)}
+        style={{
+          height: 44, padding: "0 18px",
+          display: "inline-flex", alignItems: "center", gap: 8,
+          borderRadius: 12, cursor: "pointer", textDecoration: "none",
+          fontSize: 12, fontWeight: 600, letterSpacing: "0.06em",
+          background: "rgba(255,255,255,0.04)",
+          color: zwHov ? "#fff" : "rgba(255,255,255,0.55)",
+          border: `1px solid ${glow}`,
+          boxShadow: zwHov
+            ? `0 0 14px ${glow}, 0 0 40px rgba(14,128,69,0.4), inset 0 0 10px rgba(14,128,69,0.4)`
+            : `0 0 8px rgba(14,128,69,0.4), 0 0 20px rgba(14,128,69,0.4)`,
+          transition: "all 0.2s",
+        }}
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M12 3v13M7 11l5 5 5-5" />
+          <path d="M5 19h14" />
+        </svg>
+        Zwischenzeugnis
+      </a>
+
       {/* CV Download */}
       <a
         href="/cv.pdf"
@@ -69,6 +100,8 @@ export default function Navbar({ onHome }: Props) {
         </svg>
         Lebenslauf
       </a>
+
+      </div>
     </motion.div>
   );
 }
