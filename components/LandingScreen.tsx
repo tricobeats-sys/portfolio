@@ -76,8 +76,19 @@ export default function LandingScreen({ onChoose }: Props) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.45 }}
         className="relative z-20 flex justify-end"
-        style={{ padding: "20px 20px" }}
+        style={{ padding: "20px 20px", gap: 10 }}
       >
+        <GlowButton
+          as="a"
+          href="/Zwischenzeugnis.pdf"
+          download="Mike_Hammer_Zwischenzeugnis.pdf"
+          glowColor="rgba(14,128,69,0.55)"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 3v13M7 11l5 5 5-5" /><path d="M5 19h14" />
+          </svg>
+          Zwischenzeugnis
+        </GlowButton>
         <GlowButton
           as="a"
           href="/cv.pdf"
